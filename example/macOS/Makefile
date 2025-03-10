@@ -1,9 +1,12 @@
 .PHONY: all
 all: build codesign
 
+.PHONY: dev
+dev: build
+
 .PHONY: codesign
 codesign:
-	codesign --entitlements vz.entitlements -s - ./virtualization
+	codesign --force --entitlements vz.entitlements --deep -s - ./virtualization || true
 
 .PHONY: build
 build:
