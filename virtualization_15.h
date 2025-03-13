@@ -20,6 +20,7 @@ void usbAttachDetachCompletionHandler(uintptr_t cgoHandle, void *errPtr);
 bool isNestedVirtualizationSupported();
 void setNestedVirtualizationEnabled(void *config, bool nestedVirtualizationEnabled);
 void *newVZXHCIControllerConfiguration();
+const char *getMacOSGuestAutomountTag();
 void setUSBControllersVZVirtualMachineConfiguration(void *config, void *usbControllers);
 const char *getUUIDUSBDevice(void *usbDevice);
 void *usbDevicesVZUSBController(void *usbController);

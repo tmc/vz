@@ -188,3 +188,17 @@ void *newVZUSBMassStorageDeviceWithConfiguration(void *config)
 #endif
     RAISE_UNSUPPORTED_MACOS_EXCEPTION();
 }
+
+/*!
+ @abstract The macOS automount tag.
+ @discussion A device configured with this tag will be automatically mounted in a macOS guest.
+ */
+const char *getMacOSGuestAutomountTag()
+{
+#ifdef INCLUDE_TARGET_OSX_15
+    if (@available(macOS 15, *)) {
+        return [[VZVirtioFileSystemDeviceConfiguration macOSGuestAutomountTag] UTF8String];
+    }
+#endif
+    RAISE_UNSUPPORTED_MACOS_EXCEPTION();
+}

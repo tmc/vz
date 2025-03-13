@@ -357,11 +357,16 @@ func createSharedDirectoryConfiguration(path string, tag string) (*vz.VirtioFile
 	var configErr error
 
 	if autoMount {
-		// For now, auto-mounting is not available through the bindings
-		// Use the standard approach with custom tag
-		log.Println("Auto-mounting support not available in this version, using manual mounting")
-		fsConfig, configErr = vz.NewVirtioFileSystemDeviceConfiguration(tag)
-		log.Printf("Sharing directory %q with tag %q (requires manual mounting)", path, tag)
+		// Check if macOS 13+ is available for automount tag
+		if automountTag, err := vz.MacOSGuestAutomountTag(); err == nil {
+			log.Printf("Using macOS 13+ automount tag for automatic mounting")
+			fsConfig, configErr = vz.NewVirtioFileSystemDeviceConfiguration(automountTag)
+			log.Printf("Sharing directory %q with automount tag (will be mounted automatically)", path)
+		} else {
+			log.Println("Auto-mounting requires macOS 13+, falling back to manual mounting")
+			fsConfig, configErr = vz.NewVirtioFileSystemDeviceConfiguration(tag)
+			log.Printf("Sharing directory %q with tag %q (requires manual mounting)", path, tag)
+		}
 	} else {
 		// Use the custom tag for manual mounting
 		fsConfig, configErr = vz.NewVirtioFileSystemDeviceConfiguration(tag)
